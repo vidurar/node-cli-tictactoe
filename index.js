@@ -5,17 +5,21 @@ class Game {
         this.players = {
             player1: {
                 name: '',
+                character: 'x',
                 active: false,
             },
             player2:  {
                 name: '',
+                character: 'o',
                 active: false,
             },
             computer:  {
                 name: 'R2D2',
+                character: '+',
                 active: false,
             },
         };
+        this.turnQueue = [];
         this.board = [];
         this.cli = readline.createInterface({
             input: process.stdin,
@@ -96,8 +100,11 @@ class Game {
         const setFirstPlayer = () => {
             return new Promise((resolve) => {
                 const playersList = Object.keys(this.players);
-                const firstPlayer = playersList[Math.floor(Math.random() * (playersList.length))];
+                const randomIndex = Math.floor(Math.random() * (playersList.length));
+                const firstPlayer = playersList[randomIndex];
                 this.players[firstPlayer].active = true;
+                this.turnQueue = playersList.splice(randomIndex, 1);
+                this.turnQueue.push(...playersList);
                 resolve();
             })
         }
